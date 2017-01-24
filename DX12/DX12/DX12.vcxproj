@@ -160,6 +160,7 @@
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Triangle.cpp" />
     <ClCompile Include="Vertex.cpp" />
+    <ClCompile Include="Voxel.cpp" />
     <ClCompile Include="VoxelShader.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -179,6 +180,7 @@
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Triangle.h" />
     <ClInclude Include="Vertex.h" />
+    <ClInclude Include="Voxel.h" />
     <ClInclude Include="VoxelShader.h" />
   </ItemGroup>
   <ItemGroup>
