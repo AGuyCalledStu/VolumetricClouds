@@ -19,6 +19,7 @@ public:
 	~Vertex();
 
 	XMFLOAT3 position;
-	XMFLOAT2 texture;	
+	XMFLOAT2 texture;
+	int index;
 };
 #endif
