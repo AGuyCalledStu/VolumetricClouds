@@ -93,7 +93,7 @@ bool Graphics::Init(int screenHeight, int screenWidth, HWND hwnd, Input* input_)
 	}
 
 	// Initialise the model object
-	result = model->Init(direct3D->GetDevice(), direct3D->GetDeviceContext(), "..DX12/Assets/Voxel.txt", "../DX12/Assets/cloudTex.tga", 4, 6);
+	result = model->Init(direct3D->GetDevice(), direct3D->GetDeviceContext(), "../DX12/Assets/Voxel.txt", "../DX12/Assets/cloudTex.tga", 8, 36);
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialise the model object.", L"Error", MB_OK);
