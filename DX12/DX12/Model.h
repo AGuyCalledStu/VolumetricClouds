@@ -16,6 +16,7 @@
 
 // Namespaces
 using namespace DirectX;
+using namespace std;
 
 class Model
 {
@@ -33,7 +34,7 @@ public:
 	Model(const Model&);
 	~Model();
 
-	bool Init(ID3D11Device*, ID3D11DeviceContext*, char*, int, int);
+	bool Init(ID3D11Device*, ID3D11DeviceContext*, char*, char*, int, int);
 	void CleanUp();
 	void Render(ID3D11DeviceContext*);
 
@@ -49,9 +50,14 @@ private:
 	bool LoadTexture(ID3D11Device*, ID3D11DeviceContext*, char*);
 	void ReleaseTexture();
 
+	bool LoadModel(char*);
+	void ReleaseModel();
+
 	ID3D11Buffer *vertexBuffer, *indexBuffer;
 	int vertexCount, indexCount;
 
 	Texture* texture;
+
+	ModelType* model;
 };
 #endif

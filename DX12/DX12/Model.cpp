@@ -9,6 +9,7 @@ Model::Model()
 	vertexBuffer = NULL;
 	indexBuffer = NULL;
 	texture = NULL;
+	model = NULL;
 }
 
 Model::Model(const Model& other)
@@ -19,12 +20,19 @@ Model::~Model()
 {
 }
 
-bool Model::Init(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* textureFilename, int vertexCount_, int indexCount_)
+bool Model::Init(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* modelFilename, char* textureFilename, int vertexCount_, int indexCount_)
 {
 	bool result;
 
 	vertexCount = vertexCount_;
 	indexCount = indexCount_;
+
+	// Load in the model data
+	result = LoadModel(modelFilename);
+	if (!result)
+	{
+		return false;
+	}
 
 	// Initialise the vertex and index buffers
 	result = InitBuffers(device);
@@ -50,6 +58,9 @@ void Model::CleanUp()
 
 	// Shutdown the vertex and index buffers
 	ShutdownBuffers();
+
+	// Release the model data
+	ReleaseModel();
 
 	return;
 }
@@ -98,6 +109,16 @@ bool Model::InitBuffers(ID3D11Device* device)
 	if (!indices)
 	{
 		return false;
+	}
+
+	// Load the vertex array and index array with data.
+	for (int i = 0; i < vertexCount; i++)
+	{
+		vertices[i].position = XMFLOAT3(model[i].vx, model[i].vy, model[i].vz);
+		vertices[i].texture = XMFLOAT2(model[i].tu, model[i].tv);
+		vertices[i].normal = XMFLOAT3(model[i].nx, model[i].ny, model[i].nz);
+
+		indices[i] = i;
 	}
 
 	// Load the vertex array with data
@@ -242,6 +263,74 @@ void Model::ReleaseTexture()
 		texture->CleanUp();
 		delete texture;
 		texture = 0;
+	}
+
+	return;
+}
+
+bool Model::LoadModel(char* filename)
+{
+	ifstream fin;
+	char input;
+	
+	// Open the model file
+	fin.open(filename);
+
+	// If it could not open the file then exit
+	if (fin.fail())
+	{
+		return false;
+	}
+
+	// Read up to the value of vertex count
+	fin.get(input);
+	while (input != ':')
+	{
+		fin.get(input);
+	}
+
+	// Read in the vertex count.
+	fin >> vertexCount;
+
+	// Set the number of indices to be the same as the vertex count.
+	indexCount = vertexCount;
+
+	// Create the model using the vertex count that was read in.
+	model = new ModelType[vertexCount];
+	if (!model)
+	{
+		return false;
+	}
+
+	// Read up to the beginning of the data.
+	fin.get(input);
+	while (input != ':')
+	{
+		fin.get(input);
+	}
+	fin.get(input);
+	fin.get(input);
+
+	// Read in the vertex data.
+	for (int i = 0; i<vertexCount; i++)
+	{
+		fin >> model[i].vx >> model[i].vy >> model[i].vz;
+		fin >> model[i].tu >> model[i].tv;
+		fin >> model[i].nx >> model[i].ny >> model[i].nz;
+	}
+
+	// Close the model file.
+	fin.close();
+
+	return true;
+}
+
+void Model::ReleaseModel()
+{
+	if (model)
+	{
+		delete[] model;
+		model = 0;
 	}
 
 	return;
