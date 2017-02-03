@@ -19,6 +19,7 @@ Triangle::Triangle()
 	// Bottom right
 	vertex[2].position = XMFLOAT3(0.5f, -0.5f, 0.0f);
 	vertex[2].texture = XMFLOAT2(1.0f, 0.0f);
+
 }
 
 Triangle::~Triangle()

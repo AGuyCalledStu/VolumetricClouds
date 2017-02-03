@@ -8,6 +8,7 @@
 // Includes
 #include <d3d11.h>
 #include <DirectXMath.h>
+#include <fstream>
 
 // My Class Includes
 #include "Texture.h"
@@ -19,11 +20,13 @@ using namespace DirectX;
 class Model
 {
 private:
-	/*struct Vertex
+
+	struct ModelType
 	{
-		XMFLOAT3 position;
-		XMFLOAT2 texture;
-	};*/
+		float vx, vy, vz;		// Vertices
+		float tu, tv;			// Texture coordinates
+		float nx, ny, nz;		// Normals
+	};
 
 public:
 	Model();

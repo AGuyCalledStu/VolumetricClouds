@@ -7,11 +7,12 @@
 
 // Includes
 #include "Vertex.h"
+#include "Model.h"
 
 // Namespaces
 using namespace DirectX;
 
-class Triangle
+class Triangle : public Model
 {
 public:
 	Triangle();

@@ -6,7 +6,7 @@
 #define _QUAD_H_
 
 // Includes
-#include "Triangle.h"
+#include "Vertex.h"
 
 // Namespaces
 using namespace DirectX;
@@ -17,7 +17,7 @@ public:
 	Quad();
 	~Quad();
 
-	Triangle triangle[2];
+	Vertex vertex[4];
 
 	void Translate(float x, float y, float z, float w);
 	void Rotate(float x, float y, float z, float w);
