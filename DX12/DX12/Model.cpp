@@ -8,6 +8,7 @@ Model::Model()
 {
 	vertexBuffer = NULL;
 	indexBuffer = NULL;
+	instanceBuffer = NULL;
 	texture = NULL;
 	model = NULL;
 }
@@ -20,12 +21,9 @@ Model::~Model()
 {
 }
 
-bool Model::Init(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* modelFilename, char* textureFilename, int vertexCount_, int indexCount_)
+bool Model::Init(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* modelFilename, char* textureFilename)
 {
 	bool result;
-
-	vertexCount = vertexCount_;
-	indexCount = indexCount_;
 
 	// Load in the model data
 	result = LoadModel(modelFilename);
@@ -78,6 +76,16 @@ int Model::GetIndexCount()
 	return indexCount;
 }
 
+int Model::GetVertexCount()
+{
+	return vertexCount;
+}
+
+int Model::GetInstanceCount()
+{
+	return instanceCount;
+}
+
 ID3D11ShaderResourceView* Model::GetTexture()
 {
 	return texture->GetTexture();
@@ -87,8 +95,9 @@ bool Model::InitBuffers(ID3D11Device* device)
 {
 	Vertex* vertices;
 	unsigned long* indices;
-	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
-	D3D11_SUBRESOURCE_DATA vertexData, indexData;
+	InstanceType* instances;
+	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc, instanceBufferDesc;
+	D3D11_SUBRESOURCE_DATA vertexData, indexData, instanceData;
 	HRESULT result;
 
 	// Set the number of vertices in the vertex array
@@ -190,6 +199,52 @@ bool Model::InitBuffers(ID3D11Device* device)
 	delete[] indices;
 	indices = 0;
 
+	// --- Instancing --- //
+	
+	// Set the number of instances in the array
+	instanceCount = 8;
+
+	// Create the instance array
+	instances = new InstanceType[instanceCount];
+	if (!instances)
+	{
+		return false;
+	}
+
+	// Load the instance array with data
+	instances[0].position = XMFLOAT3(-1.5f, -1.5f, 5.0f);
+	instances[1].position = XMFLOAT3(-1.5f, 1.5f, 5.0f);
+	instances[2].position = XMFLOAT3(1.5f, -1.5f, 5.0f);
+	instances[3].position = XMFLOAT3(1.5f, 1.5f, 5.0f);
+	instances[4].position = XMFLOAT3(-1.5f, -1.5f, 2.0f);
+	instances[5].position = XMFLOAT3(-1.5f, 1.5f, 2.0f);
+	instances[6].position = XMFLOAT3(1.5f, -1.5f, 2.0f);
+	instances[7].position = XMFLOAT3(1.5f, 1.5f, 2.0f);
+
+	// Set up the description of the instance buffer
+	instanceBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	instanceBufferDesc.ByteWidth = sizeof(InstanceType) * instanceCount;
+	instanceBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	instanceBufferDesc.CPUAccessFlags = 0;
+	instanceBufferDesc.MiscFlags = 0;
+	instanceBufferDesc.StructureByteStride = 0;
+
+	// Give the subresource structure a pointer to the instance data
+	instanceData.pSysMem = instances;
+	instanceData.SysMemPitch = 0;
+	instanceData.SysMemSlicePitch = 0;
+
+	// Create the instance buffer.
+	result = device->CreateBuffer(&instanceBufferDesc, &instanceData, &instanceBuffer);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	// Release the instance array now that the instance buffer has been created and loaded.
+	delete[] instances;
+	instances = 0;
+
 	return true;
 }
 
@@ -209,21 +264,36 @@ void Model::ShutdownBuffers()
 		vertexBuffer = 0;
 	}
 
+	// Release the instance buffer.
+	if (instanceBuffer)
+	{
+		instanceBuffer->Release();
+		instanceBuffer = 0;
+	}
+
 	return;
 }
 
 void Model::RenderBuffers(ID3D11DeviceContext* deviceContext)
 {
-	unsigned int stride;
-	unsigned int offset;
+	unsigned int stride[2];
+	unsigned int offset[2];
+	ID3D11Buffer* bufferPointer[2];
 
+	// Set buffer strides
+	stride[0] = sizeof(Vertex);
+	stride[1] = sizeof(InstanceType);
 
-	// Set vertex buffer stride and offset
-	stride = sizeof(Vertex);
-	offset = 0;
+	// Set buffer offsets
+	offset[0] = NULL;
+	offset[1] = NULL;
+
+	// Set the array of pointers to the vertice and instance buffers
+	bufferPointer[0] = vertexBuffer;
+	bufferPointer[1] = instanceBuffer;
 
 	// Set the vertex buffer to active in the input assembler so it can be rendered
-	deviceContext->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
+	deviceContext->IASetVertexBuffers(0, 2, bufferPointer, stride, offset);
 
 	// Set the index buffer to active in the input assembler so it can be rendered
 	deviceContext->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);

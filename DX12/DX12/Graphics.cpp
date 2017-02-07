@@ -93,7 +93,7 @@ bool Graphics::Init(int screenHeight, int screenWidth, HWND hwnd, Input* input_)
 	}
 
 	// Initialise the model object
-	result = model->Init(direct3D->GetDevice(), direct3D->GetDeviceContext(), "../DX12/Assets/Voxel.txt", "../DX12/Assets/cloudTex.tga", 8, 36);
+	result = model->Init(direct3D->GetDevice(), direct3D->GetDeviceContext(), "../DX12/Assets/Voxel.txt", "../DX12/Assets/cloudTex.tga");
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialise the model object.", L"Error", MB_OK);
@@ -248,15 +248,9 @@ bool Graphics::Render()
 	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing
 	model->Render(direct3D->GetDeviceContext());
 
-	// Render the model using the color shader
-	/*result = colourShader->Render(direct3D->GetDeviceContext(), model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix);
-	if (!result)
-	{
-		return false;
-	}*/
 
 	// Render the model using the texture shader
-	result = textureShader->Render(direct3D->GetDeviceContext(), model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, model->GetTexture());
+	result = textureShader->Render(direct3D->GetDeviceContext(), model->GetIndexCount(), model->GetInstanceCount(), worldMatrix, viewMatrix, projectionMatrix, model->GetTexture());
 	if (!result)
 	{
 		return false;

@@ -29,15 +29,22 @@ private:
 		float nx, ny, nz;		// Normals
 	};
 
+	struct InstanceType
+	{
+		XMFLOAT3 position;		// Local position of instance
+	};
+
 public:
 	Model();
 	Model(const Model&);
 	~Model();
 
-	bool Init(ID3D11Device*, ID3D11DeviceContext*, char*, char*, int, int);
+	bool Init(ID3D11Device*, ID3D11DeviceContext*, char*, char*);
 	void CleanUp();
 	void Render(ID3D11DeviceContext*);
 
+	int GetVertexCount();
+	int GetInstanceCount();
 	int GetIndexCount();
 
 	ID3D11ShaderResourceView* GetTexture();
@@ -53,8 +60,8 @@ private:
 	bool LoadModel(char*);
 	void ReleaseModel();
 
-	ID3D11Buffer *vertexBuffer, *indexBuffer;
-	int vertexCount, indexCount;
+	ID3D11Buffer *vertexBuffer, *indexBuffer, *instanceBuffer;
+	int vertexCount, indexCount, instanceCount;
 
 	Texture* texture;
 

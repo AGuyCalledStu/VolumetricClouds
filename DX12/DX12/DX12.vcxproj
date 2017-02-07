@@ -144,6 +144,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CloudGeneration.cpp" />
     <ClCompile Include="ColourShader.cpp" />
     <ClCompile Include="D3DClass.cpp" />
     <ClCompile Include="Graphics.cpp" />
@@ -165,6 +166,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="CloudGeneration.h" />
     <ClInclude Include="ColourShader.h" />
     <ClInclude Include="D3DClass.h" />
     <ClInclude Include="Graphics.h" />

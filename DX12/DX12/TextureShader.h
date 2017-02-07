@@ -30,7 +30,7 @@ public:
 
 	bool Init(ID3D11Device*, HWND);
 	void CleanUp();
-	bool Render(ID3D11DeviceContext*, int, XMMATRIX, XMMATRIX, XMMATRIX, ID3D11ShaderResourceView*);
+	bool Render(ID3D11DeviceContext*, int, int, XMMATRIX, XMMATRIX, XMMATRIX, ID3D11ShaderResourceView*);
 
 private:
 	bool InitShader(ID3D11Device*, HWND, WCHAR*, WCHAR*);
@@ -38,7 +38,7 @@ private:
 	void OutputShaderErrorMessage(ID3D10Blob*, HWND, WCHAR*);
 
 	bool SetShaderParameters(ID3D11DeviceContext*, XMMATRIX, XMMATRIX, XMMATRIX, ID3D11ShaderResourceView*);
-	void RenderShader(ID3D11DeviceContext*, int);
+	void RenderShader(ID3D11DeviceContext*, int, int);
 
 	ID3D11VertexShader* vertexShader;
 	ID3D11PixelShader* pixelShader;

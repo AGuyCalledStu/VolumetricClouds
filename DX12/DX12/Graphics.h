@@ -42,7 +42,7 @@ private:
 
 	D3DClass* direct3D;
 	Camera* mainCamera;
-	Model* model;
+	Model* model, model2;
 	ColourShader* colourShader;
 	TextureShader* textureShader;
 	ParticleShader* m_ParticleShader;
