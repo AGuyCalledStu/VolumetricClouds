@@ -13,6 +13,7 @@
 // My Class Includes
 #include "Texture.h"
 #include "Vertex.h"
+#include "Perlin.h"
 
 // Namespaces
 using namespace DirectX;
@@ -66,5 +67,7 @@ private:
 	Texture* texture;
 
 	ModelType* model;
+
+	Perlin* perlin;
 };
 #endif

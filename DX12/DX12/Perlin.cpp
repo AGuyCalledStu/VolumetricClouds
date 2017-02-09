@@ -30,6 +30,15 @@
 	r0 = t - (int)t;\
 	r1 = r0 - 1.0f;
 
+Perlin::Perlin(int octaves, float freq, float amp, int seed)
+{
+	mOctaves = octaves;
+	mFrequency = freq;
+	mAmplitude = amp;
+	mSeed = seed;
+	mStart = true;
+}
+
 float Perlin::noise1(float arg)
 {
 	int bx0, bx1;
@@ -230,15 +239,4 @@ float Perlin::perlin_noise_2D(float vec[2])
 
 
 	return result;
-}
-
-
-
-Perlin::Perlin(int octaves, float freq, float amp, int seed)
-{
-	mOctaves = octaves;
-	mFrequency = freq;
-	mAmplitude = amp;
-	mSeed = seed;
-	mStart = true;
 }
