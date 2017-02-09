@@ -153,6 +153,7 @@
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="ParticleShader.cpp" />
     <ClCompile Include="ParticleSystem.cpp" />
+    <ClCompile Include="Perlin.cpp" />
     <ClCompile Include="Quad.cpp" />
     <ClCompile Include="ShaderManager.cpp" />
     <ClCompile Include="System.cpp" />
@@ -174,6 +175,7 @@
     <ClInclude Include="Model.h" />
     <ClInclude Include="ParticleShader.h" />
     <ClInclude Include="ParticleSystem.h" />
+    <ClInclude Include="Perlin.h" />
     <ClInclude Include="Quad.h" />
     <ClInclude Include="ShaderManager.h" />
     <ClInclude Include="System.h" />

@@ -25,6 +25,9 @@
     <Filter Include="Shader Classes">
       <UniqueIdentifier>{57935632-cb7d-4c7e-8486-41f74e52a541}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Generation Classes">
+      <UniqueIdentifier>{e7f3d15f-e899-40a0-928e-9d187f9ff547}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -84,8 +87,11 @@
     <ClCompile Include="Voxel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Perlin.cpp">
+      <Filter>Generation Classes</Filter>
+    </ClCompile>
     <ClCompile Include="CloudGeneration.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Generation Classes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -143,8 +149,11 @@
     <ClInclude Include="Voxel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Perlin.h">
+      <Filter>Generation Classes</Filter>
+    </ClInclude>
     <ClInclude Include="CloudGeneration.h">
-      <Filter>Header Files</Filter>
+      <Filter>Generation Classes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
