@@ -101,34 +101,34 @@ bool Graphics::Init(int screenHeight, int screenWidth, HWND hwnd, Input* input_)
 	}
 
 	// Create the texture shader object
-	textureShader = new TextureShader;
+	/*textureShader = new TextureShader;
 	if (!textureShader)
 	{
 		return false;
-	}
+	}*/
 
 	// Initialise the texture shader object
-	result = textureShader->Init(direct3D->GetDevice(), hwnd);
+	/*result = textureShader->Init(direct3D->GetDevice(), hwnd);
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialise the texture shader object.", L"Error", MB_OK);
 		return false;
-	}
+	}*/
 
 	// Create the color shader object.
-	/*colourShader = new ColourShader;
+	colourShader = new ColourShader;
 	if (!colourShader)
 	{
 		return false;
-	}*/
+	}
 
 	// Initialise the color shader object.
-	/*result = colourShader->Init(direct3D->GetDevice(), hwnd);
+	result = colourShader->Init(direct3D->GetDevice(), hwnd);
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialise the color shader object.", L"Error", MB_OK);
 		return false;
-	}*/
+	}
 
 	return true;
 }
@@ -218,8 +218,8 @@ bool Graphics::Render()
 	XMMATRIX worldMatrix, viewMatrix, projectionMatrix;
 	bool result;
 
-	// Clear the buffers to begin the scene
-	direct3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
+	// Clear the buffers to begin the scene (Cornflour Blue)
+	direct3D->BeginScene(0.38f, 0.57f, 0.9f, 1.0f);
 
 	// Generate the view matrix based on the camera's position
 	mainCamera->Render();
@@ -250,7 +250,7 @@ bool Graphics::Render()
 
 
 	// Render the model using the texture shader
-	result = textureShader->Render(direct3D->GetDeviceContext(), model->GetIndexCount(), model->GetInstanceCount(), worldMatrix, viewMatrix, projectionMatrix, model->GetTexture());
+	result = colourShader->Render(direct3D->GetDeviceContext(), model->GetIndexCount(), model->GetInstanceCount(), worldMatrix, viewMatrix, projectionMatrix);// , model->GetTexture());
 	if (!result)
 	{
 		return false;

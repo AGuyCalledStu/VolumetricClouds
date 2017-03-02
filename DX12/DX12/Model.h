@@ -13,7 +13,8 @@
 // My Class Includes
 #include "Texture.h"
 #include "Vertex.h"
-#include "Perlin.h"
+#include "PerlinNoise.h"
+#include "ppm.h"
 
 // Namespaces
 using namespace DirectX;
@@ -28,6 +29,7 @@ private:
 		float vx, vy, vz;		// Vertices
 		float tu, tv;			// Texture coordinates
 		float nx, ny, nz;		// Normals
+		float cr, cg, cb, ca;	// Colours
 	};
 
 	struct InstanceType
@@ -61,6 +63,8 @@ private:
 	bool LoadModel(char*);
 	void ReleaseModel();
 
+	void InitPerlin();
+
 	ID3D11Buffer *vertexBuffer, *indexBuffer, *instanceBuffer;
 	int vertexCount, indexCount, instanceCount;
 
@@ -68,6 +72,12 @@ private:
 
 	ModelType* model;
 
-	Perlin* perlin;
+	// Generation variations
+	unsigned int width, height, depth;
+	unsigned int seed;
+	ppm* image;
+	PerlinNoise* perlinNoise;
+
+	double noiseOutput;
 };
 #endif

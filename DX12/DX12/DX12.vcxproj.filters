@@ -87,10 +87,13 @@
     <ClCompile Include="Voxel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Perlin.cpp">
+    <ClCompile Include="CloudGeneration.cpp">
       <Filter>Generation Classes</Filter>
     </ClCompile>
-    <ClCompile Include="CloudGeneration.cpp">
+    <ClCompile Include="..\..\..\Perlin_Noise-master\ppm.cpp">
+      <Filter>Generation Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Perlin_Noise-master\PerlinNoise.cpp">
       <Filter>Generation Classes</Filter>
     </ClCompile>
   </ItemGroup>
@@ -149,10 +152,13 @@
     <ClInclude Include="Voxel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Perlin.h">
+    <ClInclude Include="CloudGeneration.h">
       <Filter>Generation Classes</Filter>
     </ClInclude>
-    <ClInclude Include="CloudGeneration.h">
+    <ClInclude Include="..\..\..\Perlin_Noise-master\PerlinNoise.h">
+      <Filter>Generation Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Perlin_Noise-master\ppm.h">
       <Filter>Generation Classes</Filter>
     </ClInclude>
   </ItemGroup>

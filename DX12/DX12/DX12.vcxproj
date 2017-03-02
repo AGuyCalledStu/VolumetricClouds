@@ -143,6 +143,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\Perlin_Noise-master\PerlinNoise.cpp" />
+    <ClCompile Include="..\..\..\Perlin_Noise-master\ppm.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CloudGeneration.cpp" />
     <ClCompile Include="ColourShader.cpp" />
@@ -153,7 +155,6 @@
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="ParticleShader.cpp" />
     <ClCompile Include="ParticleSystem.cpp" />
-    <ClCompile Include="Perlin.cpp" />
     <ClCompile Include="Quad.cpp" />
     <ClCompile Include="ShaderManager.cpp" />
     <ClCompile Include="System.cpp" />
@@ -166,6 +167,8 @@
     <ClCompile Include="VoxelShader.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\Perlin_Noise-master\PerlinNoise.h" />
+    <ClInclude Include="..\..\..\Perlin_Noise-master\ppm.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CloudGeneration.h" />
     <ClInclude Include="ColourShader.h" />
@@ -175,7 +178,6 @@
     <ClInclude Include="Model.h" />
     <ClInclude Include="ParticleShader.h" />
     <ClInclude Include="ParticleSystem.h" />
-    <ClInclude Include="Perlin.h" />
     <ClInclude Include="Quad.h" />
     <ClInclude Include="ShaderManager.h" />
     <ClInclude Include="System.h" />

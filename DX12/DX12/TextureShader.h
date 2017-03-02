@@ -10,6 +10,8 @@
 #include <d3dcompiler.h>
 #include <directxmath.h>
 #include <fstream>
+
+// Namespaces
 using namespace DirectX;
 using namespace std;
 

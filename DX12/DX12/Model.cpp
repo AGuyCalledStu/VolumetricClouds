@@ -25,6 +25,8 @@ bool Model::Init(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char*
 {
 	bool result;
 
+	InitPerlin();
+
 	// Load in the model data
 	result = LoadModel(modelFilename);
 	if (!result)
@@ -126,6 +128,7 @@ bool Model::InitBuffers(ID3D11Device* device)
 		vertices[i].position = XMFLOAT3(model[i].vx, model[i].vy, model[i].vz);
 		vertices[i].texture = XMFLOAT2(model[i].tu, model[i].tv);
 		vertices[i].normal = XMFLOAT3(model[i].nx, model[i].ny, model[i].nz);
+		vertices[i].colour = XMFLOAT4(model[i].cr, model[i].cg, model[i].cb, model[i].ca);
 
 		indices[i] = i;
 	}
@@ -202,7 +205,7 @@ bool Model::InitBuffers(ID3D11Device* device)
 	// --- Instancing --- //
 	
 	// Set the number of instances in the array
-	instanceCount = 1000;
+	instanceCount = width * height * depth;
 
 	// Create the instance array
 	instances = new InstanceType[instanceCount];
@@ -212,34 +215,23 @@ bool Model::InitBuffers(ID3D11Device* device)
 	}
 
 	// Load the instance array with data
-	/*instances[0].position = XMFLOAT3(-1.5f, -1.5f, 5.0f);
-	instances[1].position = XMFLOAT3(-1.5f, 1.5f, 5.0f);
-	instances[2].position = XMFLOAT3(1.5f, -1.5f, 5.0f);
-	instances[3].position = XMFLOAT3(1.5f, 1.5f, 5.0f);
-	instances[4].position = XMFLOAT3(-1.5f, -1.5f, 2.0f);
-	instances[5].position = XMFLOAT3(-1.5f, 1.5f, 2.0f);
-	instances[6].position = XMFLOAT3(1.5f, -1.5f, 2.0f);
-	instances[7].position = XMFLOAT3(1.5f, 1.5f, 2.0f);*/
-
-	for (int iCount = 0; iCount < 1000;)
+	for (int iCount = 0; iCount < instanceCount;)
 	{
 		int i = 0;
 		int j = 0;
 		int k = 0;
 
-		for (i = 0; i < 10; i++)
+		for (i = 0; i < width; i++)
 		{
-			//instances[iCount].position = XMFLOAT3(i * 1.5f,  k * 1.5f, j * 1.5f);
-			//iCount++;
-
-			for (j = 0; j < 10; j++)
+			for (j = 0; j < depth; j++)
 			{
-				//instances[iCount].position = XMFLOAT3(i * 1.5f, k * 1.5f, j * 1.5f);
-				//iCount++;
-
-				for (k = 0; k < 10; k++)
+				for (k = 0; k < height; k++)
 				{
-					instances[iCount].position = XMFLOAT3(i * 4.0f, k * 4.0f, j * 4.0f);
+					noiseOutput = perlinNoise->noise((double)i/6, (double)j/6, (double)k/6);
+					if (noiseOutput >= 0.7)
+					{
+						instances[iCount].position = XMFLOAT3(i * 2.0f, k * 2.0f, j * 2.0f);
+					}
 					iCount++;
 				}
 			}
@@ -429,4 +421,19 @@ void Model::ReleaseModel()
 	}
 
 	return;
+}
+
+void Model::InitPerlin()
+{
+	// Dimensions of 3D Perlin image
+	width = 100;
+	height = 3;
+	depth = 100;
+
+	image = new ppm(width, depth);
+
+	// Generate a seed between 0 and the max value of and unsigned int
+	seed = rand() % UINT_MAX;
+
+	perlinNoise = new PerlinNoise(seed);
 }
