@@ -96,6 +96,9 @@
     <ClCompile Include="..\..\..\Perlin_Noise-master\PerlinNoise.cpp">
       <Filter>Generation Classes</Filter>
     </ClCompile>
+    <ClCompile Include="Font.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="D3DClass.h">
@@ -160,6 +163,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\Perlin_Noise-master\ppm.h">
       <Filter>Generation Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="Font.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
