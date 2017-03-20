@@ -33,7 +33,7 @@ private:
 
 public:
 	FontShader();
-	FontShader(cont FontShader&);
+	FontShader(const FontShader&);
 	~FontShader();
 
 	bool Init(ID3D11Device*, HWND);

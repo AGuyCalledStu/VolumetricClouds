@@ -151,7 +151,7 @@ bool FontShader::InitShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename, 
 	numElements = sizeof(polygonLayout) / sizeof(polygonLayout[0]);
 
 	// Create the vertex input layout.
-	result = device->CreateInputLayout(polygonLayout, numElements, vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), &layout);
+	result = device->CreateInputLayout(polygonLayout, numElements, vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), &inputLayout);
 	if (FAILED(result))
 	{
 		return false;
@@ -383,4 +383,3 @@ void FontShader::RenderShader(ID3D11DeviceContext* deviceContext, int indexCount
 
 	return;
 }
-
