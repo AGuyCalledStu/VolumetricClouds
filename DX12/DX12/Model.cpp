@@ -42,11 +42,11 @@ bool Model::Init(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char*
 	}
 
 	// Load the texture for this model.
-	result = LoadTexture(device, deviceContext, textureFilename);
+	/*result = LoadTexture(device, deviceContext, textureFilename);
 	if (!result)
 	{
 		return false;
-	}
+	}*/
 
 	return true;
 }
@@ -126,9 +126,9 @@ bool Model::InitBuffers(ID3D11Device* device)
 	for (int i = 0; i < vertexCount; i++)
 	{
 		vertices[i].position = XMFLOAT3(model[i].vx, model[i].vy, model[i].vz);
-		vertices[i].texture = XMFLOAT2(model[i].tu, model[i].tv);
-		vertices[i].normal = XMFLOAT3(model[i].nx, model[i].ny, model[i].nz);
-		vertices[i].colour = XMFLOAT4(model[i].cr, model[i].cg, model[i].cb, model[i].ca);
+		//vertices[i].texture = XMFLOAT2(model[i].tu, model[i].tv);
+		vertices[i].colour = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+		//vertices[i].normal = XMFLOAT3(model[i].nx, model[i].ny, model[i].nz);
 
 		indices[i] = i;
 	}
@@ -223,14 +223,15 @@ bool Model::InitBuffers(ID3D11Device* device)
 
 		for (i = 0; i < width; i++)
 		{
-			for (j = 0; j < depth; j++)
+			for (j = 0; j < height; j++)
 			{
-				for (k = 0; k < height; k++)
+				for (k = 0; k < depth; k++)
 				{
 					noiseOutput = perlinNoise->noise((double)i/6, (double)j/6, (double)k/6);
 					if (noiseOutput >= 0.7)
 					{
-						instances[iCount].position = XMFLOAT3(i * 2.0f, k * 2.0f, j * 2.0f);
+						instances[iCount].position = XMFLOAT3(i, j, k);
+						instances[iCount].colour = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 					}
 					iCount++;
 				}
@@ -399,7 +400,7 @@ bool Model::LoadModel(char* filename)
 	fin.get(input);
 
 	// Read in the vertex data.
-	for (int i = 0; i<vertexCount; i++)
+	for (int i = 0; i < vertexCount; i++)
 	{
 		fin >> model[i].vx >> model[i].vy >> model[i].vz;
 		fin >> model[i].tu >> model[i].tv;
@@ -430,10 +431,29 @@ void Model::InitPerlin()
 	height = 3;
 	depth = 100;
 
+	// New image using width and depth
 	image = new ppm(width, depth);
 
 	// Generate a seed between 0 and the max value of and unsigned int
 	seed = rand() % UINT_MAX;
 
+	// New perlin noise object using seed
 	perlinNoise = new PerlinNoise(seed);
+}
+
+bool Model::LoadVoxel()
+{
+	unsigned long* indices;
+
+	int vertexCount = voxel->vertexCount;
+	int indexCount = 36;
+
+	// Create the index array
+	indices = new unsigned long[indexCount];
+	if (!indices)
+	{
+		return false;
+	}
+
+	//indices[0]
 }

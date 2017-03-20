@@ -31,7 +31,7 @@ public:
 	~ColourShader();
 
 	bool Init(ID3D11Device*, HWND);
-	void Shutdown();
+	void CleanUp();
 	bool Render(ID3D11DeviceContext*, int, int, XMMATRIX, XMMATRIX, XMMATRIX);
 
 private:

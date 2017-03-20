@@ -146,7 +146,7 @@ void Graphics::CleanUp()
 	// Release the color shader object
 	if (colourShader)
 	{
-		colourShader->Shutdown();
+		colourShader->CleanUp();
 		delete colourShader;
 		colourShader = NULL;
 	}
@@ -242,19 +242,19 @@ bool Graphics::Render()
 		return false;
 	}*/
 
-	// Turn off alpha blending.
-	//direct3D->DisableAlphaBlending();
-
 	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing
 	model->Render(direct3D->GetDeviceContext());
 
 
-	// Render the model using the texture shader
+	// Render the model using the colour shader
 	result = colourShader->Render(direct3D->GetDeviceContext(), model->GetIndexCount(), model->GetInstanceCount(), worldMatrix, viewMatrix, projectionMatrix);// , model->GetTexture());
 	if (!result)
 	{
 		return false;
 	}
+
+	// Turn off alpha blending.
+	//direct3D->DisableAlphaBlending();
 
 	// Present the rendered scene to the screen.
 	direct3D->EndScene();

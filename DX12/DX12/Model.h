@@ -15,6 +15,7 @@
 #include "Vertex.h"
 #include "PerlinNoise.h"
 #include "ppm.h"
+#include "Voxel.h"
 
 // Namespaces
 using namespace DirectX;
@@ -35,6 +36,7 @@ private:
 	struct InstanceType
 	{
 		XMFLOAT3 position;		// Local position of instance
+		XMFLOAT4 colour;
 	};
 
 public:
@@ -63,12 +65,16 @@ private:
 	bool LoadModel(char*);
 	void ReleaseModel();
 
+	bool LoadVoxel();
+
 	void InitPerlin();
 
 	ID3D11Buffer *vertexBuffer, *indexBuffer, *instanceBuffer;
 	int vertexCount, indexCount, instanceCount;
 
 	Texture* texture;
+
+	Voxel* voxel;
 
 	ModelType* model;
 

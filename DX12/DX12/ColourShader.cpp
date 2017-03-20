@@ -35,7 +35,7 @@ bool ColourShader::Init(ID3D11Device* device, HWND hwnd)
 	return true;
 }
 
-void ColourShader::Shutdown()
+void ColourShader::CleanUp()
 {
 	// Shutdown the vertex and pixel shaders as well as the related objects
 	ShutdownShader();
@@ -69,8 +69,7 @@ bool ColourShader::InitShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename
 	D3D11_INPUT_ELEMENT_DESC polygonLayout[3];
 	unsigned int numElements;
 	D3D11_BUFFER_DESC matrixBufferDesc;
-
-
+	
 	// Initialise the pointers this function will use to null
 	errorMessage = NULL;
 	vertexShaderBuffer = NULL;
