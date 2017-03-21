@@ -35,6 +35,7 @@ bool Texture::Init(ID3D11Device* device, ID3D11DeviceContext* deviceContext, cha
 		return false;
 	}
 
+
 	// Setup the description of the texture.
 	textureDesc.Height = height;
 	textureDesc.Width = width;
@@ -76,6 +77,8 @@ bool Texture::Init(ID3D11Device* device, ID3D11DeviceContext* deviceContext, cha
 
 	// Generate mipmaps for this texture.
 	deviceContext->GenerateMips(textureView);
+
+
 
 	// Release the targa image data now that the image data has been loaded into the texture.
 	delete[] targaData;

@@ -470,6 +470,16 @@ void D3DClass::CleanUp()
 	return;
 }
 
+void D3DClass::TurnZBufferOn()
+{
+	m_deviceContext->OMSetDepthStencilState(m_depthStencilState, 1);
+}
+
+void D3DClass::TurnZBufferOff()
+{
+	m_deviceContext->OMSetDepthStencilState(m_depthDisabledStencilState, 1);
+}
+
 void D3DClass::TurnOnAlphaBlending()
 {
 	float blendFactor[4];

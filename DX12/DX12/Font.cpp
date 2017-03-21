@@ -61,6 +61,13 @@ bool Font::LoadFontData(char* filename)
 		return false;
 	}
 
+	// Read in the font size and spacing between chars
+	fin.open(filename);
+	if (fin.fail())
+	{
+		return false;
+	}
+
 	// Read in the 95 used ascii characters for text
 	for (i = 0; i < 95; ++i)
 	{

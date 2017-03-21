@@ -29,7 +29,7 @@ Graphics::~Graphics()
 bool Graphics::Init(int screenHeight, int screenWidth, HWND hwnd, Input* input_)
 {
 	bool result;
-	XMMatrix baseViewMatrix;
+	XMMATRIX baseViewMatrix;
 
 	input = input_;
 
@@ -56,24 +56,24 @@ bool Graphics::Init(int screenHeight, int screenWidth, HWND hwnd, Input* input_)
 	}
 
 	// Set the initial position of the camera
-	mainCamera->SetPosition(0.0f, -2.0f, -10.0f);
+	mainCamera->SetPosition(0.0f, 0.0f, -1.0f);
 	mainCamera->Render();
 	mainCamera->GetViewMatrix(baseViewMatrix);
 
 	// Create the text object
-	text = new Text;
+	/*text = new Text;
 	if (!text)
 	{
 		return false;
-	}
+	}*/
 
 	// Initialise the text object
-	result = text->Initialize(direct3D->GetDevice(), direct3D->GetDeviceContext(), hwnd, screenWidth, screenHeight, baseViewMatrix);
+	/*result = text->Initialize(direct3D->GetDevice(), direct3D->GetDeviceContext(), hwnd, screenWidth, screenHeight, baseViewMatrix);
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialise the text object", L"Error", MB_OK);
 		return false;
-	}
+	}*/
 
 	// Create the particle shader object
 	/*m_ParticleShader = new ParticleShader;
@@ -258,10 +258,10 @@ bool Graphics::Render()
 	direct3D->GetOrthoMatrix(orthoMatrix);
 
 	// Turn off the Z buffer to begin all 2D rendering
-	direct3D->TurnZBufferOff();
+	//direct3D->TurnZBufferOff();
 
 	// Turn on alpha blending
-	direct3D->TurnOnAlphaBlending();
+	//direct3D->TurnOnAlphaBlending();
 
 	// Put the particle system vertex and index buffers on the graphics pipeline to prepare them for drawing
 	/*m_ParticleSystem->Render(direct3D->GetDeviceContext());*/
@@ -274,17 +274,17 @@ bool Graphics::Render()
 	}*/
 
 	// Render the text
-	result = text->Render(direct3D->GetDeviceContext, worldMatrix, orthoMatrix);
+	/*result = text->Render(direct3D->GetDeviceContext(), worldMatrix, orthoMatrix);
 	if (!result)
 	{
 		return false;
-	}
+	}*/
 
 	// Turn off alpha blending after rendering the text
-	direct3D->TurnOffAlphaBlending();
+	//direct3D->TurnOffAlphaBlending();
 
 	// Turn the Z buffer back on after 2D rendering is complete
-	direct3D->TurnZBufferOn();
+	//direct3D->TurnZBufferOn();
 
 	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing
 	model->Render(direct3D->GetDeviceContext());
@@ -296,9 +296,6 @@ bool Graphics::Render()
 	{
 		return false;
 	}
-
-	// Turn off alpha blending.
-	//direct3D->DisableAlphaBlending();
 
 	// Present the rendered scene to the screen.
 	direct3D->EndScene();

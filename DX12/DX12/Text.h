@@ -44,8 +44,8 @@ private:
 private:
 	Font* font;
 	FontShader* fontShader;
-	int m_screenWidth, screenHeight;
-	XMMATRIX baseViewMatrix;
+	int m_screenWidth, m_screenHeight;
+	XMMATRIX m_baseViewMatrix;
 
 	SentenceType* sentence1;
 	SentenceType* sentence2;

@@ -73,7 +73,6 @@ bool FontShader::InitShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename, 
 	D3D11_SAMPLER_DESC samplerDesc;
 	D3D11_BUFFER_DESC pixelBufferDesc;
 
-
 	// Initialize the pointers this function will use to null.
 	errorMessage = 0;
 	vertexShaderBuffer = 0;

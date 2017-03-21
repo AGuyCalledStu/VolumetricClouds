@@ -427,9 +427,9 @@ void Model::ReleaseModel()
 void Model::InitPerlin()
 {
 	// Dimensions of 3D Perlin image
-	width = 100;
+	width = 250;
 	height = 3;
-	depth = 100;
+	depth = 250;
 
 	// New image using width and depth
 	image = new ppm(width, depth);

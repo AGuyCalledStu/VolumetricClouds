@@ -23,10 +23,10 @@ bool Text::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, 
 
 	// Store the screen width and height.
 	m_screenWidth = screenWidth;
-	screenHeight = screenHeight;
+	m_screenHeight = screenHeight;
 
 	// Store the base view matrix
-	baseViewMatrix = baseViewMatrix;
+	m_baseViewMatrix = baseViewMatrix;
 
 	// Create the font object
 	font = new Font;
@@ -35,8 +35,10 @@ bool Text::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, 
 		return false;
 	}
 
+	// C:\Users\Stuart\Documents\Honours\Application\DX12\DX12\data
+
 	// Initialise the font object
-	result = font->Init(device, deviceContext, "../Engine/data/fontdata.txt", "../Engine/data/font.dds");
+	result = font->Init(device, deviceContext, "../DX12/data/fontdata.txt", "../DX12/data/font.dds");
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the font object.", L"Error", MB_OK);
@@ -276,7 +278,7 @@ bool Text::UpdateSentence(SentenceType* sentence, char* text, int positionX, int
 
 	// Calculate the X and Y pixel position on the screen to start drawing to.
 	drawX = (float)(((m_screenWidth / 2) * -1) + positionX);
-	drawY = (float)((screenHeight / 2) - positionY);
+	drawY = (float)((m_screenHeight / 2) - positionY);
 
 	// Use the font class to build the vertex array from the sentence text and sentence draw location.
 	font->BuildVertexArray((void*)vertices, text, drawX, drawY);
@@ -352,7 +354,7 @@ bool Text::RenderSentence(ID3D11DeviceContext* deviceContext, SentenceType* sent
 	pixelColor = XMFLOAT4(sentence->red, sentence->green, sentence->blue, 1.0f);
 
 	// Render the text using the font shader.
-	result = fontShader->Render(deviceContext, sentence->indexCount, worldMatrix, baseViewMatrix, orthoMatrix, font->GetTexture(),
+	result = fontShader->Render(deviceContext, sentence->indexCount, worldMatrix, m_baseViewMatrix, orthoMatrix, font->GetTexture(),
 		pixelColor);
 	if (!result)
 	{

@@ -105,6 +105,9 @@
     <ClCompile Include="Text.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SimpleTexture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="D3DClass.h">
@@ -182,6 +185,9 @@
     <ClInclude Include="Text.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SimpleTexture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ColourPixelShader.hlsl">
@@ -201,6 +207,12 @@
     </FxCompile>
     <FxCompile Include="ParticlePixelShader.hlsl">
       <Filter>HLSL\ps</Filter>
+    </FxCompile>
+    <FxCompile Include="FontPixelShader.hlsl">
+      <Filter>HLSL\ps</Filter>
+    </FxCompile>
+    <FxCompile Include="FontVertexShader.hlsl">
+      <Filter>HLSL\vs</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
