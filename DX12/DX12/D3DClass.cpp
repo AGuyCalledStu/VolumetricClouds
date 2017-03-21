@@ -6,14 +6,17 @@
 
 D3DClass::D3DClass()
 {
-	m_swapChain = 0;
-	m_device = 0;
-	m_deviceContext = 0;
-	m_renderTargetView = 0;
-	m_depthStencilBuffer = 0;
-	m_depthStencilState = 0;
-	m_depthStencilView = 0;
-	m_rasterState = 0;
+	m_swapChain = NULL;
+	m_device = NULL;
+	m_deviceContext = NULL;
+	m_renderTargetView = NULL;
+	m_depthStencilBuffer = NULL;
+	m_depthStencilState = NULL;
+	m_depthStencilView = NULL;
+	m_rasterState = NULL;
+	m_depthDisabledStencilState = NULL;
+	m_alphaEnableBlendingState = NULL;
+	m_alphaDisableBlendingState = NULL;
 }
 
 D3DClass::D3DClass(const D3DClass& other)
@@ -44,6 +47,7 @@ bool D3DClass::Init(int screenHeight, int screenWidth, bool vsync, HWND hwnd, bo
 	D3D11_RASTERIZER_DESC rasterDesc;
 	D3D11_VIEWPORT viewport;
 	float fieldOfView, screenAspect;
+	D3D11_DEPTH_STENCIL_DESC depthDisabledStencilDesc;
 	D3D11_BLEND_DESC blendStateDescription;
 
 	// Store the vsync setting
@@ -342,6 +346,32 @@ bool D3DClass::Init(int screenHeight, int screenWidth, bool vsync, HWND hwnd, bo
 	// Create an orthographic projection matrix for 2D rendering
 	m_orthoMatrix = XMMatrixOrthographicLH((float)screenWidth, (float)screenHeight, screenNear, screenDepth);
 
+	// Clear the second depth stencil state before setting the parameters
+	ZeroMemory(&depthDisabledStencilDesc, sizeof(depthDisabledStencilDesc));
+
+	// Create a second depth stencil state which turns off the Z buffer for 2D rendering. The only difference is that DepthEnable is set to false, all other parameters are the same as default
+	depthDisabledStencilDesc.DepthEnable = false;
+	depthDisabledStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+	depthDisabledStencilDesc.DepthFunc = D3D11_COMPARISON_LESS;
+	depthDisabledStencilDesc.StencilEnable = true;
+	depthDisabledStencilDesc.StencilReadMask = 0xFF;
+	depthDisabledStencilDesc.StencilWriteMask = 0xFF;
+	depthDisabledStencilDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	depthDisabledStencilDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
+	depthDisabledStencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	depthDisabledStencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+	depthDisabledStencilDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	depthDisabledStencilDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
+	depthDisabledStencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	depthDisabledStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+
+	// Create the state using this device
+	result = m_device->CreateDepthStencilState(&depthDisabledStencilDesc, &m_depthDisabledStencilState);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
 	// Clear the blend state description.
 	ZeroMemory(&blendStateDescription, sizeof(D3D11_BLEND_DESC));
 
@@ -395,6 +425,12 @@ void D3DClass::CleanUp()
 		m_depthStencilView = 0;
 	}
 
+	if (m_depthDisabledStencilState)
+	{
+		m_depthDisabledStencilState->Release();
+		m_depthDisabledStencilState = 0;
+	}
+
 	if (m_depthStencilState)
 	{
 		m_depthStencilState->Release();
@@ -432,6 +468,34 @@ void D3DClass::CleanUp()
 	}
 
 	return;
+}
+
+void D3DClass::TurnOnAlphaBlending()
+{
+	float blendFactor[4];
+
+	// Setup the blend factor
+	blendFactor[0] = 0.0f;
+	blendFactor[1] = 0.0f;
+	blendFactor[2] = 0.0f;
+	blendFactor[3] = 0.0f;
+
+	// Turn on alpha blending
+	m_deviceContext->OMSetBlendState(m_alphaEnableBlendingState, blendFactor, 0xffffffff);
+}
+
+void D3DClass::TurnOffAlphaBlending()
+{
+	float blendFactor[4];
+
+	// Setup the blend factor
+	blendFactor[0] = 0.0f;
+	blendFactor[1] = 0.0f;
+	blendFactor[2] = 0.0f;
+	blendFactor[3] = 0.0f;
+
+	// Turn off alpha blending
+	m_deviceContext->OMSetBlendState(m_alphaDisableBlendingState, blendFactor, 0xffffffff);
 }
 
 void D3DClass::BeginScene(float red, float green, float blue, float alpha)

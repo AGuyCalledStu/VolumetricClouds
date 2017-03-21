@@ -14,6 +14,7 @@
 #include <d3d11.h>
 #include <directxmath.h>
 #include <dxgi1_4.h>
+#include <d3dcommon.h>
 
 // Namespaces
 using namespace DirectX;
@@ -38,6 +39,12 @@ public:
 	void GetWorldMatrix(XMMATRIX&);
 	void GetOrthoMatrix(XMMATRIX&);
 
+	void TurnZBufferOn();
+	void TurnZBufferOff();
+
+	void TurnOnAlphaBlending();
+	void TurnOffAlphaBlending();
+
 	void GetVideoCardInfo(char*, int&);
 
 private:
@@ -55,6 +62,7 @@ private:
 	XMMATRIX m_projectionMatrix;
 	XMMATRIX m_worldMatrix;
 	XMMATRIX m_orthoMatrix;
+	ID3D11DepthStencilState* m_depthDisabledStencilState;
 	ID3D11BlendState* m_alphaEnableBlendingState;
 	ID3D11BlendState* m_alphaDisableBlendingState;
 };

@@ -16,6 +16,7 @@
 #include "TextureShader.h"
 #include "ParticleShader.h"
 #include "ParticleSystem.h"
+#include "Text.h"
 
 #include "Input.h"
 
@@ -48,5 +49,6 @@ private:
 	ParticleShader* m_ParticleShader;
 	ParticleSystem* m_ParticleSystem;
 	Input* input;
+	Text* text;
 };
 #endif

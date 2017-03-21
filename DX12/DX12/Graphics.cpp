@@ -15,6 +15,7 @@ Graphics::Graphics()
 	textureShader = NULL;
 	m_ParticleShader = NULL;
 	m_ParticleSystem = NULL;
+	text = NULL;
 }
 
 Graphics::Graphics(const Graphics& other)
@@ -28,6 +29,7 @@ Graphics::~Graphics()
 bool Graphics::Init(int screenHeight, int screenWidth, HWND hwnd, Input* input_)
 {
 	bool result;
+	XMMatrix baseViewMatrix;
 
 	input = input_;
 
@@ -55,6 +57,23 @@ bool Graphics::Init(int screenHeight, int screenWidth, HWND hwnd, Input* input_)
 
 	// Set the initial position of the camera
 	mainCamera->SetPosition(0.0f, -2.0f, -10.0f);
+	mainCamera->Render();
+	mainCamera->GetViewMatrix(baseViewMatrix);
+
+	// Create the text object
+	text = new Text;
+	if (!text)
+	{
+		return false;
+	}
+
+	// Initialise the text object
+	result = text->Initialize(direct3D->GetDevice(), direct3D->GetDeviceContext(), hwnd, screenWidth, screenHeight, baseViewMatrix);
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialise the text object", L"Error", MB_OK);
+		return false;
+	}
 
 	// Create the particle shader object
 	/*m_ParticleShader = new ParticleShader;
@@ -167,6 +186,14 @@ void Graphics::CleanUp()
 		model = NULL;
 	}
 
+	// Release the text object
+	if (text)
+	{
+		text->Shutdown();
+		delete text;
+		text = NULL;
+	}
+
 	// Release the camera object
 	if (mainCamera)
 	{
@@ -215,7 +242,7 @@ bool Graphics::Update(float frameTime)
 
 bool Graphics::Render()
 {
-	XMMATRIX worldMatrix, viewMatrix, projectionMatrix;
+	XMMATRIX worldMatrix, viewMatrix, projectionMatrix, orthoMatrix;
 	bool result;
 
 	// Clear the buffers to begin the scene (Cornflour Blue)
@@ -228,9 +255,13 @@ bool Graphics::Render()
 	direct3D->GetWorldMatrix(worldMatrix);
 	mainCamera->GetViewMatrix(viewMatrix);
 	direct3D->GetProjectionMatrix(projectionMatrix);
+	direct3D->GetOrthoMatrix(orthoMatrix);
+
+	// Turn off the Z buffer to begin all 2D rendering
+	direct3D->TurnZBufferOff();
 
 	// Turn on alpha blending
-	//direct3D->EnableAlphaBlending();
+	direct3D->TurnOnAlphaBlending();
 
 	// Put the particle system vertex and index buffers on the graphics pipeline to prepare them for drawing
 	/*m_ParticleSystem->Render(direct3D->GetDeviceContext());*/
@@ -241,6 +272,19 @@ bool Graphics::Render()
 	{
 		return false;
 	}*/
+
+	// Render the text
+	result = text->Render(direct3D->GetDeviceContext, worldMatrix, orthoMatrix);
+	if (!result)
+	{
+		return false;
+	}
+
+	// Turn off alpha blending after rendering the text
+	direct3D->TurnOffAlphaBlending();
+
+	// Turn the Z buffer back on after 2D rendering is complete
+	direct3D->TurnZBufferOn();
 
 	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing
 	model->Render(direct3D->GetDeviceContext());
