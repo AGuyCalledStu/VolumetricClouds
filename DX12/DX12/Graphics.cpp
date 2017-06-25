@@ -161,7 +161,7 @@ bool Graphics::Init(int screenHeight, int screenWidth, HWND hwnd, Input* input_)
 	}
 
 	// Initialize the model list object.
-	result = m_ModelList->Init(25);
+	result = m_ModelList->Init(1);
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the model list object.", L"Error", MB_OK);
@@ -321,12 +321,12 @@ bool Graphics::Render()
 	direct3D->TurnZBufferOff();
 	direct3D->TurnOnAlphaBlending();
 
-	// Render the text strings
-	result = text->Render(direct3D->GetDeviceContext(), worldMatrix, orthoMatrix);
+	// Render the text strings (currently stop frustum culling mode from rendering)
+	/*result = text->Render(direct3D->GetDeviceContext(), worldMatrix, orthoMatrix);
 	if(!result)
 	{
 		return false;
-	}
+	}*/
 
 	direct3D->TurnOffAlphaBlending();
 	direct3D->TurnZBufferOn();
@@ -365,7 +365,14 @@ bool Graphics::Render()
 				// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
 				//model->Render(direct3D->GetDeviceContext());
 
-				// Render the model using the light shader.
+				// Render the model using the colour shader.
+				result = colourShader->Render(direct3D->GetDeviceContext(), model->GetIndexCount(), model->GetInstanceCount(), worldMatrix, viewMatrix, projectionMatrix);
+				if (!result)
+				{
+					return false;
+				}
+
+				// Render the model using the colour shader. (v2)
 				result = colourShader->Render(direct3D->GetDeviceContext(), model->GetIndexCount(), model->GetInstanceCount(), worldMatrix, viewMatrix, projectionMatrix);
 				if (!result)
 				{
