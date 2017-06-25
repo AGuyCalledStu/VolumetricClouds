@@ -8,7 +8,9 @@ System::System()
 {
 	input = NULL;
 	graphics = NULL;
-	timer = NULL;
+	timer = 0;
+	framerate = 0;
+	_cpu = 0;
 }
 
 System::System(const System& other)
@@ -70,6 +72,22 @@ bool System::Init()
 		return false;
 	}
 
+	// Create the framerate object.
+	framerate = new Framerate;
+	if (!framerate)
+	{
+		return false;
+	}
+	framerate->Init();
+
+	// Create the cpu object.
+	_cpu = new _CPU;
+	if (!_cpu)
+	{
+		return false;
+	}
+	_cpu->Init();
+
 	return true;
 }
 
@@ -95,6 +113,20 @@ void System::CleanUp()
 	{
 		delete timer;
 		timer = NULL;
+	}
+
+	// Release the framerate object
+	if (framerate)
+	{
+		delete framerate;
+		framerate = NULL;
+	}
+
+	// Release the _cpu object
+	if (_cpu)
+	{
+		delete _cpu;
+		_cpu = NULL;
 	}
 
 	// Shutdown the window
@@ -147,6 +179,8 @@ bool System::Update()
 
 	// Update the system stats.
 	timer->Update();
+	framerate->Frame();
+	_cpu->Update();
 
 	// Check if the user pressed the escape key
 	if (input->IsKeyDown(VK_ESCAPE))
@@ -155,7 +189,7 @@ bool System::Update()
 	}
 
 	// Do the frame processing for the graphics object
-	result = graphics->Update(timer->GetTime());
+	result = graphics->Update(framerate->GetFramerate(), _cpu->GetCpuPercentage(), timer->GetTime());
 	if (!result)
 	{
 		return false;

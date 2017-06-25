@@ -24,6 +24,6 @@ public:
 	bool CheckRectangle(float, float, float, float, float, float);
 
 private:
-	XMFLOAT4 plane[6];	
+	XMFLOAT4 plane[6];
 };
 #endif

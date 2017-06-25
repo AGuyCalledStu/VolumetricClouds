@@ -151,6 +151,7 @@
     <ClCompile Include="D3DClass.cpp" />
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="FontShader.cpp" />
+    <ClCompile Include="Framerate.cpp" />
     <ClCompile Include="Frustum.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="Input.cpp" />
@@ -171,6 +172,7 @@
     <ClCompile Include="Vertex.cpp" />
     <ClCompile Include="Voxel.cpp" />
     <ClCompile Include="VoxelShader.cpp" />
+    <ClCompile Include="_CPU.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Perlin_Noise-master\PerlinNoise.h" />
@@ -181,6 +183,7 @@
     <ClInclude Include="D3DClass.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="FontShader.h" />
+    <ClInclude Include="Framerate.h" />
     <ClInclude Include="Frustum.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="Input.h" />
@@ -201,6 +204,7 @@
     <ClInclude Include="Vertex.h" />
     <ClInclude Include="Voxel.h" />
     <ClInclude Include="VoxelShader.h" />
+    <ClInclude Include="_CPU.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ColourPixelShader.hlsl">
@@ -266,6 +270,13 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="VolumetricCloudsDX11.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="data\font.dds" />
+    <Image Include="data\font.tga" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="data\fontdata.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

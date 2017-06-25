@@ -15,6 +15,9 @@
 #include "Input.h"
 #include "Graphics.h"
 #include "Timer.h"
+#include "Framerate.h"
+#include "_CPU.h"
+
 
 class System
 {
@@ -41,6 +44,8 @@ private:
 	Input* input;
 	Graphics* graphics;
 	Timer* timer;
+	Framerate* framerate;
+	_CPU* _cpu;
 };
 
 // Function Prototypes

@@ -17,6 +17,8 @@
 #include "ParticleShader.h"
 #include "ParticleSystem.h"
 #include "Text.h"
+#include "ModelList.h"
+#include "Frustum.h"
 
 #include "Input.h"
 
@@ -37,11 +39,12 @@ public:
 
 	bool Init(int, int, HWND, Input*);
 	void CleanUp();
-	bool Update(float);
+	bool Update(int, int, float);
 
 private:
 	bool Render();
 	void CameraUpdate(float);
+	void ToggleControls();
 
 	D3DClass* direct3D;
 	Camera* mainCamera;
@@ -52,5 +55,9 @@ private:
 	ParticleSystem* m_ParticleSystem;
 	Input* input;
 	Text* text;
+	ModelList* m_ModelList;
+	Frustum* m_Frustum;
+
+	bool isFrustumCulling;
 };
 #endif

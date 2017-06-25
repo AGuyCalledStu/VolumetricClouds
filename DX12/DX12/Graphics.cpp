@@ -16,10 +16,14 @@ Graphics::Graphics()
 	m_ParticleShader = NULL;
 	m_ParticleSystem = NULL;
 	text = NULL;
+	m_ModelList = NULL;
+	m_Frustum = NULL;
+	isFrustumCulling = false;
 }
 
 Graphics::Graphics(const Graphics& other)
 {
+	
 }
 
 Graphics::~Graphics()
@@ -61,19 +65,19 @@ bool Graphics::Init(int screenHeight, int screenWidth, HWND hwnd, Input* input_)
 	mainCamera->GetViewMatrix(baseViewMatrix);
 
 	// Create the text object
-	/*text = new Text;
+	text = new Text;
 	if (!text)
 	{
 		return false;
-	}*/
+	}
 
 	// Initialise the text object
-	/*result = text->Initialize(direct3D->GetDevice(), direct3D->GetDeviceContext(), hwnd, screenWidth, screenHeight, baseViewMatrix);
+	result = text->Initialize(direct3D->GetDevice(), direct3D->GetDeviceContext(), hwnd, screenWidth, screenHeight, baseViewMatrix);
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialise the text object", L"Error", MB_OK);
 		return false;
-	}*/
+	}
 
 	// Create the particle shader object
 	/*m_ParticleShader = new ParticleShader;
@@ -149,6 +153,28 @@ bool Graphics::Init(int screenHeight, int screenWidth, HWND hwnd, Input* input_)
 		return false;
 	}
 
+	// Create the model list object.
+	m_ModelList = new ModelList;
+	if (!m_ModelList)
+	{
+		return false;
+	}
+
+	// Initialize the model list object.
+	result = m_ModelList->Init(25);
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the model list object.", L"Error", MB_OK);
+		return false;
+	}
+
+	// Create the frustum object.
+	m_Frustum = new Frustum;
+	if (!m_Frustum)
+	{
+		return false;
+	}
+
 	return true;
 }
 
@@ -217,15 +243,47 @@ void Graphics::CleanUp()
 		m_ParticleShader = 0;
 	}
 
+	// Release the frustum object.
+	if (m_Frustum)
+	{
+		delete m_Frustum;
+		m_Frustum = 0;
+	}
+
+	// Release the model list object.
+	if (m_ModelList)
+	{
+		m_ModelList->CleanUp();
+		delete m_ModelList;
+		m_ModelList = 0;
+	}
+
 	return;
 }
 
-bool Graphics::Update(float frameTime)
+bool Graphics::Update(int fps, int cpu, float frameTime)
 {
 	bool result;
 
+	// Set the frames per second.
+	result = text->SetFramerate(fps, direct3D->GetDeviceContext());
+	if (!result)
+	{
+		return false;
+	}
+
+	// Set the cpu usage.
+	result = text->SetCpu(cpu, direct3D->GetDeviceContext());
+	if (!result)
+	{
+		return false;
+	}
+
 	// Run the frame processing for the particle system
 	//m_ParticleSystem->Frame(frameTime, direct3D->GetDeviceContext());
+
+	// Update any toggles
+	ToggleControls();
 
 	// Update the camera
 	CameraUpdate(frameTime);
@@ -243,7 +301,10 @@ bool Graphics::Update(float frameTime)
 bool Graphics::Render()
 {
 	XMMATRIX worldMatrix, viewMatrix, projectionMatrix, orthoMatrix;
-	bool result;
+	int modelCount, renderCount;
+	float positionX, positionY, positionZ, radius;
+	XMFLOAT4 colour;
+	bool renderModel, result;
 
 	// Clear the buffers to begin the scene (Cornflour Blue)
 	direct3D->BeginScene(0.38f, 0.57f, 0.9f, 1.0f);
@@ -257,44 +318,79 @@ bool Graphics::Render()
 	direct3D->GetProjectionMatrix(projectionMatrix);
 	direct3D->GetOrthoMatrix(orthoMatrix);
 
-	// Turn off the Z buffer to begin all 2D rendering
-	//direct3D->TurnZBufferOff();
+	direct3D->TurnZBufferOff();
+	direct3D->TurnOnAlphaBlending();
 
-	// Turn on alpha blending
-	//direct3D->TurnOnAlphaBlending();
-
-	// Put the particle system vertex and index buffers on the graphics pipeline to prepare them for drawing
-	/*m_ParticleSystem->Render(direct3D->GetDeviceContext());*/
-
-	// Render the model using the particle shader
-	/*result = m_ParticleShader->Render(direct3D->GetDeviceContext(), m_ParticleSystem->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_ParticleSystem->GetTexture());
-	if (!result)
+	// Render the text strings
+	result = text->Render(direct3D->GetDeviceContext(), worldMatrix, orthoMatrix);
+	if(!result)
 	{
 		return false;
-	}*/
+	}
 
-	// Render the text
-	/*result = text->Render(direct3D->GetDeviceContext(), worldMatrix, orthoMatrix);
-	if (!result)
+	direct3D->TurnOffAlphaBlending();
+	direct3D->TurnZBufferOn();
+
+	// Construct the frustum.
+	m_Frustum->ConstructFrustum(SCREEN_DEPTH, projectionMatrix, viewMatrix);
+
+	// Get the number of models that will be rendered.
+	modelCount = m_ModelList->GetModelCount();
+
+	// Initialize the count of models that have been rendered.
+	renderCount = 0;
+
+	// Check for frustum culling mode
+	if (isFrustumCulling)
 	{
-		return false;
-	}*/
+		// Go through all the models and render them only if they can be seen by the camera view.
+		for (int i = 0; i < modelCount; i++)
+		{
+			// Get the position and color of the sphere model at this index.
+			m_ModelList->GetData(i, positionX, positionY, positionZ, colour);
+		
+			// Set the radius of the sphere (also used to define a cube)
+			radius = 1.0f;
 
-	// Turn off alpha blending after rendering the text
-	//direct3D->TurnOffAlphaBlending();
+			// Check if the sphere model is in the view frustum.
+			renderModel = m_Frustum->CheckCube(positionX, positionY, positionZ, radius);
 
-	// Turn the Z buffer back on after 2D rendering is complete
-	//direct3D->TurnZBufferOn();
+			// If it can be seen then render it, if not skip this model and check the next sphere.
+			if (renderModel)
+			{
+				// Move the model to the location it should be rendered at.
+				//D3DXMatrixTranslation(&worldMatrix, positionX, positionY, positionZ);
+				worldMatrix = XMMatrixTranslation(positionX, positionY, positionZ);
 
-	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing
-	model->Render(direct3D->GetDeviceContext());
+				// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
+				//model->Render(direct3D->GetDeviceContext());
 
+				// Render the model using the light shader.
+				result = colourShader->Render(direct3D->GetDeviceContext(), model->GetIndexCount(), model->GetInstanceCount(), worldMatrix, viewMatrix, projectionMatrix);
+				if (!result)
+				{
+					return false;
+				}
 
-	// Render the model using the colour shader
-	result = colourShader->Render(direct3D->GetDeviceContext(), model->GetIndexCount(), model->GetInstanceCount(), worldMatrix, viewMatrix, projectionMatrix);// , model->GetTexture());
-	if (!result)
+				// Reset to the original world matrix.
+				direct3D->GetWorldMatrix(worldMatrix);
+
+				// Since this model was rendered then increase the count for this frame.
+				renderCount++;
+			}
+		}
+	}
+	else if (!isFrustumCulling)
 	{
-		return false;
+		// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing
+		model->Render(direct3D->GetDeviceContext());
+
+		// Render the model using the colour shader
+		result = colourShader->Render(direct3D->GetDeviceContext(), model->GetIndexCount(), model->GetInstanceCount(), worldMatrix, viewMatrix, projectionMatrix);
+		if (!result)
+		{
+			return false;
+		}
 	}
 
 	// Present the rendered scene to the screen.
@@ -338,24 +434,34 @@ void Graphics::CameraUpdate(float frameTime)
 		// Up
 		mainCamera->MoveUpward();
 	}
-	if (input->IsKeyDown(VK_UP))
+	if (input->IsKeyDown(VK_UP))		// UP
 	{
 		// Rotate up
 		mainCamera->TurnUp();
 	}
-	if (input->IsKeyDown(VK_DOWN))
+	if (input->IsKeyDown(VK_DOWN))		// DOWN
 	{
 		// Rotate down
 		mainCamera->TurnDown();
 	}
-	if (input->IsKeyDown(VK_LEFT))
+	if (input->IsKeyDown(VK_LEFT))		// LEFT
 	{
 		// Rotate left
 		mainCamera->TurnLeft();
 	}
-	if (input->IsKeyDown(VK_RIGHT))
+	if (input->IsKeyDown(VK_RIGHT))		// RIGHT
 	{
 		// Rotate right
 		mainCamera->TurnRight();
+	}
+}
+
+void Graphics::ToggleControls()
+{
+	if (input->IsKeyDown(0x43))			// C
+	{
+		// Toggle frustum culling
+		isFrustumCulling = !isFrustumCulling;
+		input->KeyUp(0x43);
 	}
 }

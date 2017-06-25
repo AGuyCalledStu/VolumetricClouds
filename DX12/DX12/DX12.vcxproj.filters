@@ -28,6 +28,9 @@
     <Filter Include="Generation Classes">
       <UniqueIdentifier>{e7f3d15f-e899-40a0-928e-9d187f9ff547}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Data">
+      <UniqueIdentifier>{ed1ebe8c-b97f-4d79-b05c-68f02dbf5a3a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -112,6 +115,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ModelList.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Framerate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="_CPU.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -200,6 +209,12 @@
     <ClInclude Include="ModelList.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Framerate.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="_CPU.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ColourPixelShader.hlsl">
@@ -231,5 +246,18 @@
     <ResourceCompile Include="VolumetricCloudsDX11.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="data\font.dds">
+      <Filter>Data</Filter>
+    </Image>
+    <Image Include="data\font.tga">
+      <Filter>Data</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="data\fontdata.txt">
+      <Filter>Data</Filter>
+    </Text>
   </ItemGroup>
 </Project>
